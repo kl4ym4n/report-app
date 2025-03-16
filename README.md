@@ -1,10 +1,10 @@
-# Gantt Report
+# App Report
 
-A web application for managing tasks and projects using Gantt charts with real-time progress tracking.
+A web application for managing tasks and projects usingcharts with real-time progress tracking.
 
 ## Features
 
-- 📊 Interactive Gantt chart visualization
+- 📊 Interactive chart visualization
 - 🔐 Google OAuth authentication
 - 📱 Responsive design
 - 📈 Task progress tracking
