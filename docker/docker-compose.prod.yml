@@ -1,8 +1,8 @@
 services:
   client:
     build:
-      context: ..
-      dockerfile: docker/client/Dockerfile.prod
+      context: .
+      dockerfile: client/Dockerfile.prod
     environment:
       - REACT_APP_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
     depends_on:
@@ -10,8 +10,8 @@ services:
 
   server:
     build:
-      context: ../server
-      dockerfile: ../docker/server/Dockerfile.prod
+      context: .
+      dockerfile: server/Dockerfile.prod
     environment:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - JWT_SECRET=${JWT_SECRET}
