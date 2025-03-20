@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Task } from '../models/Task';
 import { AuthRequest } from '../middleware/auth';
+import mongoose from 'mongoose';
 
 export const taskController = {
     async getAllTasks(req: AuthRequest, res: Response) {
@@ -27,11 +28,20 @@ export const taskController = {
 
     async updateTask(req: AuthRequest, res: Response) {
         try {
+            const taskId = req.params.id;
+            if (!mongoose.Types.ObjectId.isValid(taskId)) {
+                return res.status(400).json({ message: 'Invalid task ID' });
+            }
+
             const task = await Task.findOneAndUpdate(
-                { id: req.params.id, userId: req.user.userId },
+                { 
+                    _id: taskId,
+                    userId: req.user.userId 
+                },
                 req.body,
                 { new: true }
             );
+
             if (!task) {
                 return res.status(404).json({ message: 'Task not found' });
             }
@@ -43,10 +53,16 @@ export const taskController = {
 
     async deleteTask(req: AuthRequest, res: Response) {
         try {
+            const taskId = req.params.id;
+            if (!mongoose.Types.ObjectId.isValid(taskId)) {
+                return res.status(400).json({ message: 'Invalid task ID' });
+            }
+
             const task = await Task.findOneAndDelete({ 
-                id: req.params.id, 
+                _id: taskId,
                 userId: req.user.userId 
             });
+
             if (!task) {
                 return res.status(404).json({ message: 'Task not found' });
             }

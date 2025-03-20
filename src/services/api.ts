@@ -14,16 +14,18 @@ const transformTask = (task: any): Task => ({
 
 const getAuthHeader = (): HeadersInit => {
     const token = localStorage.getItem('token');
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    return token ? { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    } : {
+        'Content-Type': 'application/json'
+    };
 };
 
 export const api = {
     async getTasks(): Promise<Task[]> {
         const response = await fetch(`${API_URL}/tasks`, {
-            headers: {
-                ...getAuthHeader(),
-                'Content-Type': 'application/json'
-            }
+            headers: getAuthHeader()
         });
         if (!response.ok) {
             throw new Error('Failed to fetch tasks');
@@ -33,13 +35,11 @@ export const api = {
     },
 
     async createTask(task: Task): Promise<Task> {
+        const { id, ...taskData } = task; // Удаляем id при создании
         const response = await fetch(`${API_URL}/tasks`, {
             method: 'POST',
-            headers: {
-                ...getAuthHeader(),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(task),
+            headers: getAuthHeader(),
+            body: JSON.stringify(taskData),
         });
         if (!response.ok) {
             throw new Error('Failed to create task');
@@ -51,10 +51,7 @@ export const api = {
     async updateTask(task: Task): Promise<Task> {
         const response = await fetch(`${API_URL}/tasks/${task.id}`, {
             method: 'PUT',
-            headers: {
-                ...getAuthHeader(),
-                'Content-Type': 'application/json'
-            },
+            headers: getAuthHeader(),
             body: JSON.stringify(task),
         });
         if (!response.ok) {
